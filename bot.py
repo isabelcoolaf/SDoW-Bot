@@ -27,4 +27,17 @@ async def i(o):
     e.set_footer(text=f'Requested by {o.author} ({o.author.id})')
     await o.send(embed=e)
 
+@b.command(name='help')
+async def h(o):
+    a = o.author
+    # TODO
+    e = discord.Embed(color=0x68ceff, title='SDoW Help', description='tbd')
+    e.timestamp = datetime.utcnow()
+    try:
+        await a.send(embed=e)
+        if o.guild:
+            await o.send(f'{a.mention} check your DMs :eyes:')
+    except discord.Forbidden:
+        await o.send(f'{a.mention} could you check your privacy settings and try again? I need to be able to DM you ( ‘ ͡ . ͜ ʖ ͡ . )')
+
 b.run(c['token'])
