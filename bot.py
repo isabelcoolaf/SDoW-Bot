@@ -16,6 +16,8 @@ c = json.load(open('config.json'))
 b = commands.AutoShardedBot(command_prefix=commands.when_mentioned_or('sdow-'), case_insensitive=True, activity=discord.Game(name='Six Degrees of Wikipedia!'))
 b.remove_command('help')
 
+ac = []
+
 async def g(s, t, o, e, m):
     def k(t):
         return 'https://en.wikipedia.org/wiki/' + t.replace(' ', '_')
@@ -122,30 +124,37 @@ async def h(o):
 @b.command(name='play')
 async def p(o):
     a = o.author
+    if a.id in ac:
+        return
     def c(m):
         return m.author.id == a.id and m.channel.id == o.channel.id
     async def i(s):
         if s:
             q = await o.send(f'{a.mention} What is the first article?')
+            ac.append(a.id)
         else:
             q = await o.send(f'{a.mention} What is the second article?')
+            ac.append(a.id)
         try:
             m = await b.wait_for('message', check=c, timeout=60)
         except asyncio.TimeoutError:
             await o.send(f'{a.mention} action timed out.')
             await q.delete()
+            ac.remove(a.id)
             return
         await q.delete()
         if not m.content:
             try:
                 await m.delete()
             except: pass
+            ac.remove(a.id)
             await o.send(f'{a.mention} why?? why are you doing this to me? i just want to function normally then i have to make an edge case because *someone* decided to upload an image or post a game/spotify invite. grrRRRRRR :japanese_goblin:')
             return
         v = m.content
         try:
             await m.delete()
         except: pass
+        ac.remove(a.id)
         return v
     s = await i(True)
     if not s:
