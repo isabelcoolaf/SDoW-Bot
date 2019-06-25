@@ -91,7 +91,7 @@ async def g(s, t, o, e, m):
 
 @b.command(name='info')
 async def i(o):
-    e = discord.Embed(color=0x68ceff, description='Made by Isabel#0002', title='About SDoW')
+    e = discord.Embed(color=0x68ceff, description='Made by Isabel#0002', title='About SDoW Bot')
     e.add_field(name='About', value='Six Degrees of Wikipedia (The Discord Bot) is made for Discord Hack Week in 2019.\nThe bot is based off the [Six Degrees of Wikipedia](https://sixdegreesofwikipedia.com) game.', inline=False)
     e.add_field(name='Links', value='[discord.py](https://github.com/Rapptz/discord.py)\n[GitHub (for this bot)](https://github.com/Mippy/SDOW-Bot)\n[Six Degrees of Wikipedia](https://sixdegreesofwikipedia.com)\n[GitHub (for the site above)](https://github.com/jwngr/sdow)', inline=False)
     e.set_thumbnail(url='https://raw.githubusercontent.com/wikimedia/portals/master/dev/wikipedia.org/assets/img/Wikipedia-logo-v2.png')
