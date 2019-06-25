@@ -93,6 +93,8 @@ async def g(s, t, o, e, m):
                             de = f"\n{pi}/{len(pagel)} pages."
                         j.description = f"{len(d['paths'])} path{pp} with {len(d['paths'][0])-1} degree{pd} of separation." + de
             await m.edit(embed=pagel[0])
+            if len(pagel) != 1:
+                pass
 
 @b.command(name='info')
 async def i(o):
@@ -107,8 +109,8 @@ async def i(o):
 @b.command(name='help')
 async def h(o):
     a = o.author
-    # TODO
-    e = discord.Embed(color=0x68ceff, title='SDoW Help', description='tbd')
+    e = discord.Embed(color=0x68ceff, title='SDoW Help', description='`sdow-` is the prefix.\n\n- `help` | What do you think it does?\n- `info` | A little more background info to the bot.\n- `play` | Play the game.')
+    e.set_thumbnail(url='https://raw.githubusercontent.com/wikimedia/portals/master/dev/wikipedia.org/assets/img/Wikipedia-logo-v2.png')
     e.timestamp = datetime.utcnow()
     try:
         await a.send(embed=e)
