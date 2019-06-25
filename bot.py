@@ -32,6 +32,11 @@ async def g(s, t, o, e, m):
                 e.title = 'Error'
                 e.description = d['error']
                 pagel.append(e)
+            if r.status == 500:
+                e.color = discord.Color.dark_red()
+                e.title = 'Internal Server Error'
+                e.description = 'Something bad is happening...'
+                pagel.append(e)
             if r.status == 200:
                 e.color = discord.Color.green()
                 e.title = f'Links from {d["sourcePageTitle"]} to {d["targetPageTitle"]}'
