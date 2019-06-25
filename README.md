@@ -7,4 +7,4 @@ Take the challenge!
 # Invite the bot
 https://discordapp.com/api/oauth2/authorize?client_id=592950662845956105&permissions=27712&scope=bot
 
-The Manage Messages permission is not necessary. It just keeps out clutter.
+The Manage Messages permission is not necessary; it just keeps out clutter.
