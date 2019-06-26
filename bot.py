@@ -28,18 +28,26 @@ async def g(s, t, o, e, m):
         async with p.post('https://api.sixdegreesofwikipedia.com/paths', data=d.encode('UTF-8'), headers=h) as r:
             pagel = []
             e.timestamp = datetime.utcnow()
-            d = await r.json()
-            if r.status == 400:
+            try:
+                d = await r.json()
+                y = True
+            except:
+                e.color = discord.Color.red()
+                e.title = 'Error'
+                e.description = "Please check your input and try again..."
+                pagel.append(e)
+                y = False
+            if r.status == 400 and y:
                 e.color = discord.Color.red()
                 e.title = 'Error'
                 e.description = d['error']
                 pagel.append(e)
-            if r.status == 500:
+            if r.status == 500 and y:
                 e.color = discord.Color.dark_red()
                 e.title = 'Internal Server Error'
                 e.description = 'Something bad is happening...'
                 pagel.append(e)
-            if r.status == 200:
+            if r.status == 200 and y:
                 e.color = discord.Color.green()
                 e.title = f'Links from {d["sourcePageTitle"]} to {d["targetPageTitle"]}'
                 if len(d['paths']) == 0:
@@ -55,8 +63,6 @@ async def g(s, t, o, e, m):
                         pp = 's'
                     if len(d['paths'][0])-1 != 1:
                         pd = 's'
-                    surl = k(d['sourcePageTitle'])
-                    turl = k(d['targetPageTitle'])
                     fs = {"0": ""}
                     page = 0
                     for path in d['paths']:
@@ -75,14 +81,16 @@ async def g(s, t, o, e, m):
                             e.remove_field(egi)
                             pagel.append(e)
                             e = discord.Embed(color=discord.Color.green(), title=f'Links from {d["sourcePageTitle"]} to {d["targetPageTitle"]}', description=f"{len(d['paths'])} path{pp} with {len(d['paths'][0])-1} degree{pd} of separation.\n{len(pagel)} page{pps}.")
+                            e.timestamp = datetime.utcnow()
+                            e.set_footer(text=f"Requested by {o.author} ({o.author.id})")
                             e.clear_fields()
-                            e.add_field(name='Original Articles', value=f'- [{d["sourcePageTitle"]}]({surl})\n- [{d["targetPageTitle"]}]({turl})', inline=False)
                             egi = -1
                         if egi == 23:
                             pagel.append(e)
                             e = discord.Embed(color=discord.Color.green(), title=f'Links from {d["sourcePageTitle"]} to {d["targetPageTitle"]}', description=f"{len(d['paths'])} path{pp} with {len(d['paths'][0])-1} degree{pd} of separation.\n{len(pagel)} page{pps}.")
+                            e.timestamp = datetime.utcnow()
+                            e.set_footer(text=f"Requested by {o.author} ({o.author.id})")
                             e.clear_fields()
-                            e.add_field(name='Original Articles', value=f'- [{d["sourcePageTitle"]}]({surl})\n- [{d["targetPageTitle"]}]({turl})', inline=False)
                             egi = -1
                         egi += 1
                         e.add_field(name='Paths', value=k, inline=False)
@@ -96,7 +104,47 @@ async def g(s, t, o, e, m):
                         j.description = f"{len(d['paths'])} path{pp} with {len(d['paths'][0])-1} degree{pd} of separation." + de
             await m.edit(embed=pagel[0])
             if len(pagel) != 1:
-                pass
+                right = "\N{BLACK RIGHTWARDS ARROW}"
+                left = "\N{LEFTWARDS BLACK ARROW}"
+                def rc(r, u):
+                    return u.id == o.author.id and str(r.emoji) in ['➡', '⬅'] and r.message.id == m.id
+                async def rw(ups=1):
+                    if ups == 1:
+                        await m.add_reaction(right)
+                        await m.remove_reaction(left, b.user)
+                    elif ups == (len(pagel)):
+                        await m.add_reaction(left)
+                        await m.remove_reaction(right, b.user)
+                    else:
+                        await m.add_reaction(left)
+                        await m.add_reaction(right)
+                    try:
+                        w = await b.wait_for('reaction_add', timeout=60, check=rc)
+                    except asyncio.TimeoutError:
+                        try:
+                            await m.clear_reactions()
+                        except:
+                            await m.remove_reaction(left, b.user)
+                            await m.remove_reaction(right, b.user)
+                        return
+                    try:
+                        await m.remove_reaction(w[0], w[1])
+                    except: pass
+                    if str(w[0]) == "➡":
+                        ups += 1
+                        if ups > len(pagel):
+                            await o.send(f'{w[1].mention} you\'ve reached the last page already!')
+                            ups -= 1
+                        if ups == 2:
+                            await m.remove_reaction(right, b.user)
+                    else:
+                        ups -= 1
+                        if ups == 0:
+                            await o.send(f'{w[1].mention} you\'ve reached the first page already!')
+                            ups = 1
+                    await m.edit(embed=pagel[ups-1])
+                    await rw(ups)
+                await rw()
 
 @b.command(name='info')
 async def i(o):
@@ -148,7 +196,7 @@ async def p(o):
                 await m.delete()
             except: pass
             ac.remove(a.id)
-            await o.send(f'{a.mention} why?? why are you doing this to me? i just want to function normally then i have to make an edge case because *someone* decided to upload an image or post a game/spotify invite. grrRRRRRR :japanese_goblin:')
+            await o.send(f'{a.mention} why?? why are you doing this to me? i just want to function normally then i have to make an edge case because *someone* decided to upload an image or file or something. grrRRRRRR :japanese_goblin:')
             return
         v = m.content
         try:
