@@ -11,5 +11,7 @@ The Manage Messages permission is not necessary; it just keeps out clutter.
 
 ## Commands
 `sdow-help` Displays all commands.
+
 `sdow-info` Gives more info about the bot.
+
 `sdow-play` Play the game!
