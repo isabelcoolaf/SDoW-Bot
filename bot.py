@@ -77,8 +77,9 @@ async def g(s, t, o, e, m):
                             fs[str(page)] = rs + "\n"
                     egi = -1
                     for _, k in fs.items():
-                        if len(e) >= 6000:
-                            e.remove_field(egi)
+                        if len(e) >= 5000:
+                            while len(e) >= 5000:
+                                e.remove_field(egi)
                             pagel.append(e)
                             e = discord.Embed(color=discord.Color.green(), title=f'Links from {d["sourcePageTitle"]} to {d["targetPageTitle"]}', description=f"{len(d['paths'])} path{pp} with {len(d['paths'][0])-1} degree{pd} of separation.\n{len(pagel)} page{pps}.")
                             e.timestamp = datetime.utcnow()
