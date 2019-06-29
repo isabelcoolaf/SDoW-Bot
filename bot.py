@@ -69,7 +69,8 @@ async def g(s, t, o, e, m):
                         rs = ""
                         for i in path:
                             t = d['pages'][str(i)]['title']
-                            rs += f"- [{t}]({d['pages'][str(i)]['url']}) "
+                            r = d['pages'][str(i)]['url'].replace(')', '\)')
+                            rs += f"- [{t}]({r}) "
                         if (len(fs[str(page)]) + len(rs) + 1) <= 1024:
                             fs[str(page)] += rs + "\n"
                         else:
